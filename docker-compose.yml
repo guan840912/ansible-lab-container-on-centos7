@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+    ansible:
+        container_name: ansible-server
+        image: ansible/ansible:centos7
+        ports:
+          - "25000:22"
+        command: tail -f /dev/null
+        volumes: 
+          - "./ansible:/root/ansible"
+    web_1:
+        container_name: web
+        image: guanyebo/centos-sshd:7
+        privileged: true
+        ports:
+          - "25001:22"
+          - "5000:80"
+        volumes: 
+          - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        command: /usr/sbin/sshd -D

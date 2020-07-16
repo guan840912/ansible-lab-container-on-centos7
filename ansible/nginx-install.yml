@@ -1,0 +1,26 @@
+- name: Configure webserver with nginx
+  hosts: web
+  tasks:
+    - name: Add epel repositories .
+      yum_repository:
+        name: epel
+        description: EPEL YUM repo
+        file: external_repos
+        baseurl: https://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+        gpgcheck: no
+
+    - name: install nginx
+      yum: name=nginx update_cache=yes
+
+    - name: copy nginx config file
+      copy: src=files/nginx.conf dest=/etc/nginx/nginx.conf
+
+    - name: copy index.html
+      template: src=templates/index.html.j2 dest=/usr/share/nginx/html/index.html
+        mode=0644
+    - name: just force systemd to reread configs (2.4 and above)
+      systemd:
+        daemon_reload: yes
+
+    - name: restart nginx
+      service: name=nginx state=started
