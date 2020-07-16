@@ -24,6 +24,8 @@ $ docker exec -it ansible-server bash
 
 [container] : pip install ansible 
 
+[container] : cd ~/ansible 
+
 [container] : ansible -i host -m ping 
 
 [container] : ansible-playbook -i host nginx-install.yml -vv 
